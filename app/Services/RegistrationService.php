@@ -5,21 +5,27 @@ class RegistrationService
 
     public function getList(array $query): array
     {
-        $keyword = trim($query['q'] ?? '');
-        $page = max(1, (int)($query['page'] ?? 1));
-        $perPage = 5; // Cấu hình hiển thị 5 đơn hàng trên 1 trang
+        $keyword = trim($query['q'] ?? ''); 
+        $page = max(1, (int)($query['page'] ?? 1)); 
+        $perPage = 5; 
 
-        $totalItems = $this->repo->countAll($keyword);
-        $totalPages = max(1, (int)ceil($totalItems / $perPage));
-        if ($page > $totalPages) $page = $totalPages;
-        $offset = ($page - 1) * $perPage;
+        $allowedSort = ['id', 'Registration_code', 'customer_name', 'created_at']; 
+        $sort = in_array($query['sort'] ?? '', $allowedSort, true) ? $query['sort'] : 'created_at';
+        $direction = strtoupper($query['direction'] ?? '') === 'ASC' ? 'ASC' : 'DESC';
+
+        $totalItems = $this->repo->countAll($keyword); 
+        $totalPages = max(1, (int)ceil($totalItems / $perPage)); 
+        if ($page > $totalPages) $page = $totalPages; 
+        $offset = ($page - 1) * $perPage; 
 
         return [
-            'registrations' => $this->repo->getPaginated($keyword, $perPage, $offset),
-            'keyword'       => $keyword,
-            'page'          => $page,
-            'totalPages'    => $totalPages,
-            'totalItems'    => $totalItems
+            'registrations' => $this->repo->getPaginated($keyword, $perPage, $offset, $sort, $direction), 
+            'page'          => $page, 
+            'totalPages'    => $totalPages, 
+            'totalItems'    => $totalItems,
+            'sort'          => $sort,
+            'direction'     => $direction,
+            'keyword'       => $keyword 
         ];
     }
 

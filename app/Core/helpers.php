@@ -46,17 +46,27 @@ function old(string $key, $default = '')
 function require_login(): void
 {
     if (!isset($_SESSION['user_id'])) {
-        flash('error', 'Vui lòng đăng nhập để truy cập chức năng này.');
-        redirect('/login');
-    };
+        return;
+    }
 
-    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 900)) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000, $params['path']);
-        session_destroy();
-        session_start();
-        flash('error', 'Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.');
-        redirect('/login');
-    };
+    $timeout_duration = 900; 
+
+    if (isset($_SESSION['last_activity'])) {
+        $elapsed_time = time() - $_SESSION['last_activity'];
+
+        if ($elapsed_time > $timeout_duration) {
+            unset($_SESSION['user_id']);
+            unset($_SESSION['user_email']);
+            unset($_SESSION['last_activity']);
+            session_destroy(); 
+
+            session_start();
+            $_SESSION['flash_errors'] = 'Phiên đăng nhập đã hết hạn. Vui lòng thử lại';
+
+            header("Location: /login");
+            exit;
+        }
+    }
+
     $_SESSION['last_activity'] = time();
 }

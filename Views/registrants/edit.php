@@ -10,13 +10,13 @@
         <input type="hidden" name="id" value="<?= e((string)$registrant['id']) ?>">
 
         <div class="form-group">
-            <label>Họ và tên khách hàng (Hỗ trợ tên tiếng Việt 2 - 5 từ) (*):</label>
+            <label>Họ và tên khách hàng(*):</label>
             <input type="text" name="name" class="form-control" value="<?= e($registrant['name']) ?>">
             <?php if (isset($errors['name'])): ?><div class="error-text"><?= e($errors['name']) ?></div><?php endif; ?>
         </div>
 
         <div class="form-group">
-            <label>Địa chỉ Email liên hệ (Định dạng: tenho@gmail.com) (*):</label>
+            <label>Địa chỉ Email liên hệ (*):</label>
             <input type="text" name="email" class="form-control" value="<?= e($registrant['email']) ?>">
             <?php if (isset($errors['email'])): ?><div class="error-text"><?= e($errors['email']) ?></div><?php endif; ?>
         </div>

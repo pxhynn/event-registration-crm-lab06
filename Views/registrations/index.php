@@ -34,6 +34,7 @@
             </tr>
         </thead>
         <tbody>
+            
             <?php if (empty($registrations)): ?>
                 <tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px;">Hệ thống chưa ghi nhận đơn đặt vé nào.</td></tr>
             <?php else: ?>

@@ -20,8 +20,8 @@
    - Sử dụng trình duyệt truy cập đường dẫn: `http://localhost:8000`
 
 ## 👥 Tài khoản Demo nghiệm thu bài Lab
-- **Tài khoản Quản trị**: `admin@eventcrm.vn` | **Mật khẩu**: `123456`
-- **Tài khoản Nhân viên**: `staff@eventcrm.vn` | **Mật khẩu**: `123456`
+- **Tài khoản Quản trị**: `admin@gmail.com` | **Mật khẩu**: `123456`
+- **Tài khoản Nhân viên**: `staff@gmail.com` | **Mật khẩu**: `123456`
 
 ## 🛡️ Điểm nhấn Kỹ thuật bảo mật trong dự án
 - **SQL Injection Prevention**: Toàn bộ thao tác đọc ghi dữ liệu từ GET/POST đều được xử lý bóc tách tham số qua PDO Prepared Statements (`bindValue`).

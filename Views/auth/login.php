@@ -4,6 +4,15 @@
     
     <?php partial('flash'); ?>
 
+    <?php if (!empty($_SESSION['flash_errors'])): ?>
+        <div class="alert alert-danger bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong class="font-bold">Thông báo: </strong>
+            <span class="block sm:inline"><?= htmlspecialchars($_SESSION['flash_errors']) ?></span>
+        </div>
+        
+        <?php unset($_SESSION['flash_errors']); ?>
+    <?php endif; ?>
+
     <form action="/login" method="POST">
         <div class="form-group">
             <label for="email">Địa chỉ Email:</label>
