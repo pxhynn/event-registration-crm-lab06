@@ -7,33 +7,44 @@ class RegistrationRepository
     {
         $sql = "SELECT COUNT(*) AS total FROM registrations";
         $params = [];
-        if ($keyword !== '') {
-            $sql .= " WHERE registration_code LIKE :keyword OR customer_name LIKE :keyword OR customer_email LIKE :keyword";
-            $params['keyword'] = '%' . $keyword . '%';
+        
+        if ($keyword !== '') { 
+            $sql .= " WHERE ticket_code LIKE :k1 OR customer_name LIKE :k2 OR customer_email LIKE :k3";
+            $params['k1'] = '%' . $keyword . '%';
+            $params['k2'] = '%' . $keyword . '%';
+            $params['k3'] = '%' . $keyword . '%';
         }
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-        return (int)($stmt->fetch()['total'] ?? 0);
+        
+        $stmt = $this->db->prepare($sql); 
+        $stmt->execute($params); 
+        return (int)($stmt->fetch()['total'] ?? 0); 
     }
 
-    public function getPaginated(string $keyword, int $limit, int $offset): array
+    public function getPaginated(string $keyword, int $limit, int $offset, string $sort, string $direction): array
     {
         $sql = "SELECT * FROM registrations";
         $params = [];
+        
         if ($keyword !== '') {
-            $sql .= " WHERE registration_code LIKE :keyword OR customer_name LIKE :keyword OR customer_email LIKE :keyword";
-            $params['keyword'] = '%' . $keyword . '%';
+            $sql .= " WHERE ticket_code LIKE :k1 OR customer_name LIKE :k2 OR customer_email LIKE :k3";
+            $params['k1'] = '%' . $keyword . '%';
+            $params['k2'] = '%' . $keyword . '%';
+            $params['k3'] = '%' . $keyword . '%';
         }
-        $sql .= " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
 
-        $stmt = $this->db->prepare($sql);
-        foreach ($params as $key => $value) {
-            $stmt->bindValue(':' . $key, $value, PDO::PARAM_STR);
+        $sql .= " ORDER BY {$sort} {$direction} LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->db->prepare($sql); 
+
+        foreach ($params as $key => $value) { 
+            $stmt->bindValue(':' . $key, $value, PDO::PARAM_STR); 
         }
+
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll();
+        
+        $stmt->execute(); 
+        return $stmt->fetchAll(); 
     }
 
     public function create(array $data): bool

@@ -1,3 +1,24 @@
+<?php /** @var array $errors */ ?>
+
+<style>
+.error-text {
+    color: var(--danger, #C27D6B); 
+    font-size: 11pt;              
+    margin-top: 6px;              
+    font-weight: bold;
+}
+</style>
+
+<script>
+if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_RELOAD) {
+    document.addEventListener("DOMContentLoaded", function() {
+        const errorElements = document.querySelectorAll('.error-text');
+        errorElements.forEach(function(element) {
+            element.remove();
+        });
+    });
+}
+</script>
 <h1>Thêm lượt Đăng ký Tham gia mới</h1>
 <p><a href="/registrants" style="color: var(--accent); text-decoration: none; font-weight: bold;">← Quay về danh sách quản lý</a></p>
 
@@ -35,6 +56,13 @@
             <label>Ghi chú hệ thống:</label>
             <textarea name="note" class="form-control" rows="4" placeholder="Nhập yêu cầu đặc biệt của khách nếu có..."><?= e(old('note')) ?></textarea>
         </div>
+
+        <div style="display: none;">
+            <label>Nếu bạn là người, vui lòng để trống ô này:</label>
+            <input type="text" name="fax_number" value="">
+        </div>
+
+        <input type="hidden" name="status" value="new">
 
         <button type="submit" class="btn">Lưu thông tin khách hàng</button>
     </form>

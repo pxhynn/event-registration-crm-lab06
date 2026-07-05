@@ -69,7 +69,7 @@ class RegistrantService
                 'email'            => trim($input['email']),
                 'phone'            => trim($input['phone']),
                 'interested_event' => $input['interested_event'],
-                'status'           => $input['status'],
+                'status'           => $input['status'] ?? 'đăng ký mới',
                 'note'             => trim($input['note'] ?? '')
             ];
             $this->repo->update($id, $data);
@@ -106,7 +106,14 @@ class RegistrantService
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) { 
             $errors['email'] = 'Định dạng email không hợp lệ.'; 
         }
-        if ($phone === '') $errors['phone'] = 'Số điện thoại bắt buộc phải nhập.';
+
+        if ($phone === '') {
+            $errors['phone'] = 'Số điện thoại liên lạc bắt buộc nhập.';
+        } 
+
+        elseif (!preg_match('/^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})$/', $phone)) {
+            $errors['phone'] = 'Định dạng số điện thoại không hợp lệ (Phải bắt đầu bằng số 0 và đủ 10-11 chữ số).';
+        }
         
         $validEvents = ['Pottery Workshop', 'Baking Masterclass', 'Chill Live Acoustic', 'Indie Music Fest'];
         if (!in_array($event, $validEvents, true)) {

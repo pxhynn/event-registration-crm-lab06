@@ -16,14 +16,28 @@ class RegistrantController
         render('registrants/create', ['title' => 'Thêm mới thông tin Đăng ký', 'errors' => []]);
     }
 
-    public function store(): void
+   public function store(): void
     {
         require_login(); 
-        $result = $this->service->createRegistrant($_POST); 
+
+        if (!empty($_POST['fax_number'])) {
+            http_response_code(400);
+            die("Phát hiện hành vi Spam! Request của bạn đã bị hệ thống từ chối xử lý.");
+        }
+
+        $data = [
+            'name'             => trim($_POST['name'] ?? ''),
+            'email'            => trim($_POST['email'] ?? ''),
+            'phone'            => trim($_POST['phone'] ?? ''),
+            'interested_event' => $_POST['interested_event'] ?? '',
+            'note'             => trim($_POST['note'] ?? '')
+        ];
+
+        $result = $this->service->createRegistrant($data); 
 
         if (!$result['success']) { 
             render('registrants/create', [ 
-                'title' => 'Thêm mới thông tin Đăng ký', 
+                'title'  => 'Thêm lượt Đăng ký Tham gia mới', 
                 'errors' => $result['errors'] 
             ]);
             return; 

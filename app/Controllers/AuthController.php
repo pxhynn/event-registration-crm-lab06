@@ -43,15 +43,12 @@ class AuthController
 
     public function logout(): void
     {
+        unset($_SESSION['user_id']);
+        unset($_SESSION['user_email']);
+        unset($_SESSION['last_activity']);
 
-        $_SESSION = []; 
-        if (ini_get('session.use_cookies')) {
-            $params = session_get_cookie_params(); 
-            setcookie(session_name(), '', time() - 42000, $params['path']); 
-        }
-        session_destroy(); 
-        session_start();
-        flash('success', 'Bạn đã đăng xuất tài khoản an toàn.');
-        redirect('/login'); 
+        flash('success', 'Bạn đã đăng xuất khỏi hệ thống CRM thành công.');
+
+        redirect('/login');
     }
 }

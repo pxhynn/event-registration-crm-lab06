@@ -7,10 +7,14 @@ class RegistrantRepository
     {
         $sql = "SELECT COUNT(*) AS total FROM registrants";
         $params = [];
+        
         if ($keyword !== '') { 
-            $sql .= " WHERE name LIKE :keyword OR email LIKE :keyword OR phone LIKE :keyword";
-            $params['keyword'] = '%' . $keyword . '%';
+            $sql .= " WHERE name LIKE :k1 OR email LIKE :k2 OR phone LIKE :k3";
+            $params['k1'] = '%' . $keyword . '%';
+            $params['k2'] = '%' . $keyword . '%';
+            $params['k3'] = '%' . $keyword . '%';
         }
+        
         $stmt = $this->db->prepare($sql); 
         $stmt->execute($params); 
         return (int)($stmt->fetch()['total'] ?? 0); 
@@ -21,8 +25,10 @@ class RegistrantRepository
         $sql = "SELECT * FROM registrants";
         $params = [];
         if ($keyword !== '') {
-            $sql .= " WHERE name LIKE :keyword OR email LIKE :keyword OR phone LIKE :keyword";
-            $params['keyword'] = '%' . $keyword . '%';
+            $sql .= " WHERE name LIKE :k1 OR email LIKE :k2 OR phone LIKE :k3";
+            $params['k1'] = '%' . $keyword . '%';
+            $params['k2'] = '%' . $keyword . '%';
+            $params['k3'] = '%' . $keyword . '%';
         }
 
         $sql .= " ORDER BY {$sort} {$direction} LIMIT :limit OFFSET :offset";
@@ -50,8 +56,18 @@ class RegistrantRepository
         $sql = "INSERT INTO registrants (name, email, phone, interested_event, status, note) 
                 VALUES (:name, :email, :phone, :interested_event, :status, :note)";
         $stmt = $this->db->prepare($sql);
+        
         try {
-            return $stmt->execute($data);
+            $stmt->bindValue(':name', $data['name'] ?? '', PDO::PARAM_STR);
+            $stmt->bindValue(':email', $data['email'] ?? '', PDO::PARAM_STR);
+            $stmt->bindValue(':phone', $data['phone'] ?? '', PDO::PARAM_STR);
+            $stmt->bindValue(':interested_event', $data['interested_event'] ?? '', PDO::PARAM_STR);
+
+            $stmt->bindValue(':status', 'đăng ký mới', PDO::PARAM_STR); 
+            
+            $stmt->bindValue(':note', $data['note'] ?? '', PDO::PARAM_STR);
+
+            return $stmt->execute();
         } catch (PDOException $e) {
             if (isset($e->errorInfo[1]) && (int)$e->errorInfo[1] === 1062) { 
                 throw new DuplicateRecordException('Email này đã đăng ký tham gia sự kiện trước đó.');
